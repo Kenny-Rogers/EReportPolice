@@ -103,13 +103,15 @@ public class LoginScreen extends AppCompatActivity {
         Location location = locationTracker.getLocation();
 
         if (location == null) {
-            locationTracker = new LocationTracker(getApplicationContext());
-            log_location(locationTracker);
+            //locationTracker = new LocationTracker(getApplicationContext());
+            //log_location(locationTracker);
+            lat = "";
+            lon = "";
             Toast.makeText(getApplicationContext(), "Failed to get locations", Toast.LENGTH_LONG).show();
         } else {
             lat = location.getLatitude() + "";
             lon = location.getLongitude() + "";
-
+        }
             params.put("geo_lat", lat);
             params.put("geo_long", lon);
             params.put("team_id", "4");
@@ -139,8 +141,5 @@ public class LoginScreen extends AppCompatActivity {
             NetworkUtil.getInstance(getApplicationContext()).addToRequestQueue(request);
 
             return true;
-        }
-
-        return false;
     }
 }
