@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">E Report (Police)</string>
+    <string name="team_name">patrol team name</string>
+    <string name="password">password</string>
+    <string name="sign_in">sign in</string>
+    <string name="title_activity_home">Home</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+</resources>
