@@ -73,7 +73,8 @@ public class LocationAlarm extends BroadcastReceiver {
                 Map<String, String> params = new HashMap<>();
                 params.put("geo_lat", lat);
                 params.put("geo_long", lon);
-                params.put("team_id", "4");
+                params.put("user_id", "4");
+                params.put("type_of_user", "patrol_team");
                 return params;
             }
         };

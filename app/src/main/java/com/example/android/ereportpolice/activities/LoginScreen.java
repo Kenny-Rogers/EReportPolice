@@ -114,7 +114,8 @@ public class LoginScreen extends AppCompatActivity {
         }
             params.put("geo_lat", lat);
             params.put("geo_long", lon);
-            params.put("team_id", "4");
+        params.put("user_id", "4");
+        params.put("type_of_user", "patrol_team");
 
             Toast.makeText(getApplicationContext(), "Lat: " + lat + "\n Lon:" + lon, Toast.LENGTH_SHORT).show();
 
