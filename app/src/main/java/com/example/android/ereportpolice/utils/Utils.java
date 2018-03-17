@@ -15,7 +15,7 @@ import com.example.android.ereportpolice.receivers.LocationAlarm;
 
 public class Utils {
     //holds the IP ADDRESS or URL of the server
-    public static final String SERVER_URL = "http://192.168.43.18/";
+    public static final String SERVER_URL = "http://192.168.8.100/";
     //variables for alarm activity
     private static AlarmManager alarmManager;
     private static PendingIntent pendingIntent;

@@ -12,13 +12,32 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.example.android.ereportpolice.R;
+import com.example.android.ereportpolice.fragments.AnnouncementListFragment;
 import com.example.android.ereportpolice.fragments.ComplainsFragment;
+import com.example.android.ereportpolice.models.Announcement;
+import com.example.android.ereportpolice.models.App;
+import com.example.android.ereportpolice.utils.NetworkUtil;
 import com.example.android.ereportpolice.utils.Utils;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
+import io.objectbox.Box;
+import io.objectbox.BoxStore;
 
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    Box<Announcement> announcements;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +57,12 @@ public class Home extends AppCompatActivity
 
         //setting up alarm for 5 sec update of location
         Utils.startAlarm(getApplicationContext());
+
+        //setting up local storage
+        local_storage_setup();
+
+        //getting latest announcements
+        sync_data();
     }
 
 
@@ -85,7 +110,7 @@ public class Home extends AppCompatActivity
             // Handle the camera action
             fragment = new ComplainsFragment();
         } else if (id == R.id.nav_gallery) {
-
+            fragment = new AnnouncementListFragment();
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
@@ -110,5 +135,54 @@ public class Home extends AppCompatActivity
         return true;
     }
 
+    private void local_storage_setup() {
+        //ObjectBox set up
+        BoxStore boxStore = ((App) getApplication()).getBoxStore();
+        announcements = boxStore.boxFor(Announcement.class);
+    }
+
+    //gets latest announcements
+    private void sync_data() {
+        final String date;
+        String url;
+        if (announcements.getAll().isEmpty()) {
+            date = "";
+        } else {
+            ArrayList<Announcement> list_announcements = (ArrayList<Announcement>) announcements.getAll();
+            int count = list_announcements.size();
+            Announcement announcement = list_announcements.get(count - 1);
+            date = announcement.getDate();
+        }
+
+        url = Utils.SERVER_URL + "final_proj_api/public/get_users_list.php?user_type=announcement&date=" + date;
+
+        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONArray responsearray = new JSONArray(response);
+                    for (int i = 0; i < responsearray.length(); i++) {
+                        JSONObject object = responsearray.getJSONObject(i);
+                        Announcement announcement = new Announcement();
+                        announcement.setImage(object.getString("image"));
+                        announcement.setDate(object.getString("date_published"));
+                        announcement.setMessage(object.getString("message"));
+                        announcement.setTitle(object.getString("title"));
+                        announcements.put(announcement);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                Toast.makeText(getApplicationContext(), "Data returned", Toast.LENGTH_SHORT).show();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), "No new announcements found", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        NetworkUtil.getInstance(getApplicationContext()).addToRequestQueue(request);
+    }
 
 }
