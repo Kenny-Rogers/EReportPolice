@@ -1,5 +1,6 @@
 package com.example.android.ereportpolice.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,7 +11,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.android.ereportpolice.R;
-import com.example.android.ereportpolice.utils.Utils;
+import com.example.android.ereportpolice.utils.LocationTracker;
 
 /**
  * Created by krogers on 2/1/18.
@@ -37,7 +38,8 @@ public class ComplainsFragment extends Fragment {
         btn_stop_tracking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Utils.stopAlarm(getActivity().getApplicationContext());
+
+                getActivity().stopService(new Intent(getContext(), LocationTracker.class));
             }
         });
     }

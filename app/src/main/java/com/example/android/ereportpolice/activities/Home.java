@@ -55,8 +55,6 @@ public class Home extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //setting up alarm for 5 sec update of location
-        Utils.startAlarm(getApplicationContext());
 
         //setting up local storage
         local_storage_setup();

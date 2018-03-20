@@ -1,13 +1,19 @@
 package com.example.android.ereportpolice.utils;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
-import android.os.SystemClock;
-import android.widget.Toast;
+import android.util.Log;
 
-import com.example.android.ereportpolice.receivers.LocationAlarm;
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by krogers on 1/26/18.
@@ -15,24 +21,52 @@ import com.example.android.ereportpolice.receivers.LocationAlarm;
 
 public class Utils {
     //holds the IP ADDRESS or URL of the server
-    public static final String SERVER_URL = "http://192.168.8.100/";
-    //variables for alarm activity
-    private static AlarmManager alarmManager;
-    private static PendingIntent pendingIntent;
+    public static final String SERVER_URL = "http://192.168.43.18/";
+    private static final String TAG = "Utils";
 
-    //start the alarm
-    public static void startAlarm(Context context) {
-        alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        Toast.makeText(context.getApplicationContext(), "Setting alarm", Toast.LENGTH_LONG).show();
-        Intent intent = new Intent(context.getApplicationContext(), LocationAlarm.class);
-        pendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), 0, intent, 0);
-        alarmManager.setRepeating(AlarmManager.RTC, SystemClock.elapsedRealtime() + 5000, 5000, pendingIntent);
-    }
+    public static void publish_location(final Context context, final String lat, final String lon) {
+        //URL
+        String url = Utils.SERVER_URL + "final_proj_api/public/register_user.php?user_type=location";
 
-    //stop the alarm
-    public static void stopAlarm(Context context) {
-        alarmManager.cancel(pendingIntent);
-        Toast.makeText(context.getApplicationContext(), "Stopping alarm", Toast.LENGTH_LONG).show();
+        Map<String, String> params = new HashMap<>();
+        params.put("geo_lat", lat);
+        params.put("geo_long", lon);
+        params.put("user_id", "4");
+        params.put("type_of_user", "patrol_team");
+
+        //sending details to server
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, new JSONObject(params), new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.e("server_response", "onResponse: " + response);
+                try {
+                    //  JSONObject object = new JSONObject(response);
+                    if (response.getInt("status") == 1) {
+                        Log.i(TAG, "location details {lat: " + lat + " and lng: " + lon + "} sent successfully");
+                    } else {
+                        Log.i(TAG, "Failed to send data");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, "Failed to send data" + error.toString());
+            }
+        }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json; charset=utf-8");
+                return headers;
+            }
+        };
+
+        NetworkUtil.getInstance(context.getApplicationContext()).addToRequestQueue(request);
     }
 
 
