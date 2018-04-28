@@ -14,7 +14,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.LoginScreen">
+        <activity android:name=".activities.LoginScreen"></activity>
+        <activity
+            android:name=".activities.Home"
+            android:label="@string/title_activity_home"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -22,15 +26,10 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".activities.Home"
-            android:label="@string/title_activity_home"
-            android:theme="@style/AppTheme.NoActionBar" />
-
         <service android:name=".utils.LocationTracker" />
 
         <activity android:name=".activities.DetailedAnnouncementActivity" />
-
+        <activity android:name=".activities.ComplaintDetailsActivity"></activity>
     </application>
 
 </manifest>

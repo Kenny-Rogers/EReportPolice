@@ -98,6 +98,7 @@ public class LocationTracker extends Service {
         getFusedLocationProviderClient(this).requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
     }
 
+
     public void onLocationChanged(Location location) {
         Utils.publish_location(getApplicationContext(), Double.toString(location.getLatitude()),
                 Double.toString(location.getLongitude()));

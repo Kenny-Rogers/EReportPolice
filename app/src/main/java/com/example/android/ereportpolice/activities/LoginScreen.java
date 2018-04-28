@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 
 import com.android.volley.AuthFailureError;
@@ -27,7 +26,7 @@ import java.util.Map;
 public class LoginScreen extends AppCompatActivity {
     private static final String TAG = "LoginScreen";
 
-    private Button btn_sign_in;
+    //private Button btn_sign_in;
     private EditText et_team_name, et_password;
 
     @Override
@@ -39,7 +38,7 @@ public class LoginScreen extends AppCompatActivity {
     }
 
     private void init() {
-        btn_sign_in = findViewById(R.id.btn_sign_in);
+        //btn_sign_in = findViewById(R.id.btn_sign_in);
         et_team_name = findViewById(R.id.et_team_name);
         et_password = findViewById(R.id.et_password);
     }
