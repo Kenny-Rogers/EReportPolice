@@ -63,5 +63,8 @@ public class ComplaintDetailsActivity extends AppCompatActivity {
 
     public void goto_location(View view) {
         //goto location activity
+        Intent intent = new Intent(this, ComplaintMapView.class);
+        intent.putExtra("location_details", location_object);
+        startActivity(intent);
     }
 }
