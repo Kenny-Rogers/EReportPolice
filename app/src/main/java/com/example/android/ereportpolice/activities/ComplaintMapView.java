@@ -1,7 +1,9 @@
 package com.example.android.ereportpolice.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 
 import com.example.android.ereportpolice.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -11,8 +13,12 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class ComplaintMapView extends FragmentActivity implements OnMapReadyCallback {
+import org.json.JSONException;
+import org.json.JSONObject;
 
+public class ComplaintMapView extends FragmentActivity implements OnMapReadyCallback {
+    private static final String TAG = "ComplaintMapView";
+    String location_details;
     private GoogleMap mMap;
 
     @Override
@@ -23,6 +29,9 @@ public class ComplaintMapView extends FragmentActivity implements OnMapReadyCall
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        Intent intent = getIntent();
+        location_details = intent.getStringExtra("location_details");
+        Log.i(TAG, "onCreate: location details " + location_details);
     }
 
 
@@ -38,10 +47,18 @@ public class ComplaintMapView extends FragmentActivity implements OnMapReadyCall
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        LatLng complaint_loc = new LatLng(0, 0);
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        try {
+            JSONObject locationJSONobject = new JSONObject(location_details);
+            complaint_loc = new LatLng(Double.parseDouble(locationJSONobject.getString("geo_lat")),
+                    Double.parseDouble(locationJSONobject.getString("geo_lat")));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        // Add a marker in complaint_loc and move the camera
+
+        mMap.addMarker(new MarkerOptions().position(complaint_loc).title("Marker to complaint"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(complaint_loc));
     }
 }
