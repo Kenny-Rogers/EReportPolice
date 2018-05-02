@@ -1,11 +1,15 @@
 package com.example.android.ereportpolice.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -15,6 +19,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.example.android.ereportpolice.R;
 import com.example.android.ereportpolice.utils.NetworkUtil;
 import com.example.android.ereportpolice.utils.Utils;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,9 +30,12 @@ import java.util.Map;
 
 public class ComplaintDetailsActivity extends AppCompatActivity {
     private static final String TAG = "ComplaintDetailsActivit";
-    String server_response, location_object;
+    public ImageView iv_media;
+    public VideoView vv_media;
+    String server_response, location_object, complaint_media;
     int complaint_id;
     TextView tv_name, tv_telephone, tv_type_issue, tv_nature_of_issue, tv_date_time_of_report;
+    private String type_name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +54,10 @@ public class ComplaintDetailsActivity extends AppCompatActivity {
         tv_telephone = findViewById(R.id.tv_telephone);
         tv_nature_of_issue = findViewById(R.id.tv_nature_of_issue);
         tv_type_issue = findViewById(R.id.tv_type_issue);
+        iv_media = findViewById(R.id.iv_media_image);
+        vv_media = findViewById(R.id.vv_media_image);
+        iv_media.setVisibility(View.GONE);
+        vv_media.setVisibility(View.GONE);
     }
 
     private void displayDetails() {
@@ -55,7 +67,29 @@ public class ComplaintDetailsActivity extends AppCompatActivity {
             JSONObject complaintJSONObject = complaint_array.getJSONObject(complaint_id);
 
             location_object = complaintJSONObject.getJSONObject("location").toString();
+            if (complaintJSONObject.has("complaint_media")) {
+                JSONObject mediaJSONObject = complaintJSONObject.getJSONObject("complaint_media");
+                complaint_media = mediaJSONObject.getString("media_name");
+                type_name = mediaJSONObject.getString("media_type");
 
+                if ((type_name.equals("image/jpeg")) ||
+                        (type_name.equals("image/jpg")) || (type_name.equals("image/pjpeg")) ||
+                        (type_name.equals("image/x-png")) || (type_name.equals("image/png"))) {
+                    iv_media.setVisibility(View.VISIBLE);
+                    String image_url = Utils.SERVER_URL + "final_proj_api/public/complaint_media/" + complaint_media;
+                    Picasso.with(getApplicationContext()).load(image_url).into(iv_media);
+                } else {
+                    vv_media.setVisibility(View.VISIBLE);
+                    MediaController mediacontroller = new MediaController(this);
+                    vv_media.setMediaController(mediacontroller);
+                    mediacontroller.setAnchorView(vv_media);
+                    String video_url = Utils.SERVER_URL + "final_proj_api/public/complaint_media/" + complaint_media;
+                    Uri uri = Uri.parse(video_url);
+                    vv_media.setVideoURI(uri);
+                    vv_media.start();
+                }
+
+            }
             JSONObject complainantJSONObject = complaintJSONObject.getJSONObject("complainant");
             JSONObject complaint = complaintJSONObject.getJSONObject("complaint");
 
