@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#2196F3"
     android:orientation="vertical"
     tools:context=".activities.DetailedAnnouncementActivity">
 
@@ -17,12 +18,22 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.2"
+        android:gravity="center"
+        android:textAllCaps="true"
+        android:textSize="20dp"
+        android:textStyle="bold"
         tools:text="Title" />
 
-    <TextView
-        android:id="@+id/tv_content"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
-        tools:text="This is message" />
+        android:layout_weight="2">
+
+        <TextView
+            android:id="@+id/tv_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:text="This is message" />
+    </ScrollView>
+
 </LinearLayout>

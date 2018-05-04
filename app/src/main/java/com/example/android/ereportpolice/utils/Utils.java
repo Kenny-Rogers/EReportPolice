@@ -21,7 +21,7 @@ import java.util.Map;
 
 public class Utils {
     //holds the IP ADDRESS or URL of the server
-    public static final String SERVER_URL = "http://192.168.8.100/";
+    public static final String SERVER_URL = "http://192.168.8.101/";
     private static final String TAG = "Utils";
 
     public static void publish_location(final Context context, final String lat, final String lon) {

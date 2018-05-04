@@ -45,7 +45,9 @@ public class AnnouncementAdapter extends ArrayAdapter<Announcement> {
         //setting the details
         String image_url = Utils.SERVER_URL + "final_proj_api/public/images/" + announcement.getImage();
         title.setText(announcement.getTitle());
-        description.setText(announcement.getMessage());
+        String s = announcement.getMessage();
+        String upToNCharacters = s.substring(0, Math.min(s.length(), 25));
+        description.setText(upToNCharacters + "...");
         Picasso.with(getContext()).load(image_url).into(image);
 
         return announcement_view;

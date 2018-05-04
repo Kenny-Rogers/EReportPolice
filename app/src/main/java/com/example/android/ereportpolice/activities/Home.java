@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -38,6 +39,7 @@ import io.objectbox.BoxStore;
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     Box<Announcement> announcements;
+    TextView team_name_textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +57,8 @@ public class Home extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        team_name_textView = findViewById(R.id.team_name_textView);
+        //TODO:: get team name function
 
         //setting up local storage
         local_storage_setup();
@@ -109,14 +113,16 @@ public class Home extends AppCompatActivity
             fragment = new ComplainsFragment();
         } else if (id == R.id.nav_gallery) {
             fragment = new AnnouncementListFragment();
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
+//        } else if (id == R.id.nav_slideshow) {
+//
+//        } else if (id == R.id.nav_manage) {
+//
+//        } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
 
+        } else {
+            fragment = new ComplainsFragment();
         }
 
         if (fragment != null) {
